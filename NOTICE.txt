@@ -1,0 +1,1 @@
+Function grapher uses the library exp4j, written by Frank Asseg and licensed under the Apache License 2.0
