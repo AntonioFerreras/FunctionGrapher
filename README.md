@@ -10,6 +10,6 @@ I wanted a tool to use in high school math class to experiment with functions as
 This project also taught me how to use graphics in Java and ways to draw graphs with smooth curves (Lerping points).
 
 ## Libraries
-FUnction Grapher uses the exp4j library to evaluate the right hand side of the expression to find the y coordinate.
+Function Grapher uses the exp4j library to evaluate the right hand side of the expression to find the y coordinate.
 It is licensed under the Apache License 2.0 and was written by Frank Asseg
 
