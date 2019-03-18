@@ -1,6 +1,8 @@
 # FunctionGrapher
 Tool that lets you graph math functions
 
+You can download a standalone JAR file here: https://antfs10.itch.io/function-grapher
+
 ## How to use
 Enter the right hand side of the function by typing it, or by using the convenient buttons at your disposal.
 Change the graph PRECISION and RANGE to experiment with different detail and zoom levels for the graph view.
