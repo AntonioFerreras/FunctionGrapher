@@ -2,7 +2,7 @@
 Tool that lets you graph math functions
 
 ## How to use
-Enter the right hand side of the function by typing it, or by using the convenient buttons at your displosal.
+Enter the right hand side of the function by typing it, or by using the convenient buttons at your disposal.
 Change the graph PRECISION and RANGE to experiment with different detail and zoom levels for the graph view.
 
 ## Why I made this
