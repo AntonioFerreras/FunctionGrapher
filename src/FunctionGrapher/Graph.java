@@ -63,18 +63,13 @@ public class Graph extends JPanel {
 		super.paintComponent(g);
 		g2 = (Graphics2D) g;
 		
-		//Draw axis
-		g2.setColor(MFrame.cl220);
-		g2.setStroke(new BasicStroke(scale(axisStroke)));
-		g2.drawLine(0, h/2, w, h/2);//x
-		g2.drawLine(w/2, 0, w/2, h);//y
-		
-		//Draw grid and big tick numbers
-		g2.setStroke(new BasicStroke(scale(gridStroke)));
+		/*Draw grid and big tick numbers*/
+		g2.setStroke(new BasicStroke(scaleOnlyUp(gridStroke)));
 		g2.setFont(new Font("Consolas", Font.PLAIN, scale(15)));
 		
-		//Pixel gab between grid lines
-		int spaceBetweenBigTicks = scale(50);
+		//Pixel gap between grid lines
+		//int spaceBetweenBigTicks = scale(50);
+		int spaceBetweenBigTicks = w/10;
 		
 		//Amount of grid ticks on graph
 		int numOfBigTicksInRange = (int)(w/spaceBetweenBigTicks);
@@ -84,7 +79,7 @@ public class Graph extends JPanel {
 		
 		//Go through each grid line
 		for(int i = 0; i <= numOfBigTicksInRange; i++) {
-			//Number to be drawn on graph at respective tick
+			/*Number to be drawn on graph at respective tick*/
 			//String xNum = df.format(i*bigTick - range/2);
 			//String yNum = df.format(range/2 - i*bigTick);
 			
@@ -118,6 +113,12 @@ public class Graph extends JPanel {
 					drawRightString("0", w/2-scale(7), i*spaceBetweenBigTicks+fontHeight);//Draw zero once
 			}
 		}
+		
+		//Draw axis
+		g2.setColor(MFrame.cl220);
+		g2.setStroke(new BasicStroke(scaleOnlyUp(axisStroke)));
+		g2.drawLine(0, h/2, w, h/2);//x
+		g2.drawLine(w/2, 0, w/2, h);//y
 		
 		//Connect them with lines
 		connectPoints();
@@ -153,7 +154,7 @@ public class Graph extends JPanel {
 	
 	private void connectPoints() {
 		g2.setColor(MFrame.clLtBlue);
-		g2.setStroke(new BasicStroke(scale(2)));
+		g2.setStroke(new BasicStroke(scaleOnlyUp(2)));
 		for(int i = 0; i < points.length; i++) {
 			if(i != 0) {
 				int xPreviousLocationOnGraph = (int)map(points[i-1].x, 0-range/2, range/2, 0, w);
@@ -175,6 +176,13 @@ public class Graph extends JPanel {
 	
 	
 	private int scale(int n) {
-		return (int)(n*uiM);
+		return Math.round(n*uiM);
+	}
+	
+	private int scaleOnlyUp(int n) {
+		if(uiM > 1)
+			return Math.round(n*uiM);
+		else 
+			return n;
 	}
 }
