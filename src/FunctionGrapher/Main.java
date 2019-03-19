@@ -53,7 +53,10 @@ public class Main {
 			
 			//Set UIM to ratio of screenHeight to 1080p
 			uiM = screenHeight/1080f;
-		}
+			
+			//Round uiM to the first decimal place
+			uiM = (Math.round(uiM/0.1f))*0.1f;
+		}	
 		
 		// Customize default JOptionPane Colours and fonts
 		UIManager.put("Label.font", new Font("Microsoft JhengHei UI", Font.BOLD, scale(15)));
