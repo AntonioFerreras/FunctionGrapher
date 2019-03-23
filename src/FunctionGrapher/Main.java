@@ -67,7 +67,8 @@ public class Main {
 
 		// Variables
 		String expression = "x";
-		double range = 20;
+		double xRange = 20;
+		double yRange = xRange;
 		double precision = 0.01;
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -382,24 +383,57 @@ public class Main {
 				txtPrecision.setFont(new Font("Consolas", Font.PLAIN, scale(16)));
 				p.add(txtPrecision);
 
-				// Label for Range
-				JLabel lblRange = new JLabel("Graph Range:");
+				// Label for range
+				JLabel lblRange = new JLabel("Graph range:");
 				lblRange.setBounds(scale(graphWidth + 415), scale(95), scale(140), scale(25));
 				lblRange.setForeground(MFrame.cl250);
 				lblRange.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(18)));
 				p.add(lblRange);
+				
+				// Label for xRange
+				JLabel lblXRange = new JLabel("x:");
+				lblXRange.setBounds(scale(graphWidth + 415), scale(125), scale(25), scale(25));
+				lblXRange.setForeground(MFrame.cl250);
+				lblXRange.setFont(new Font("Microsoft Tai Le", Font.BOLD, scale(20)));
+				p.add(lblXRange);
 
-				// Entry for range
-				JTextField txtRange = new JTextField();
-				txtRange.setBounds(scale(graphWidth + 415), scale(120), scale(180), scale(35));
-				txtRange.setForeground(MFrame.cl250);
-				txtRange.setBackground(MFrame.clDkPane);
-				txtRange.setCaretColor(MFrame.cl250);
-				txtRange.setSelectionColor(MFrame.cl250);
-				txtRange.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(18)));
-				txtRange.setText(String.valueOf(range));
-				txtRange.setFont(new Font("Consolas", Font.PLAIN, scale(16)));
-				p.add(txtRange);
+				// Entry for xRange
+				JTextField txtXRange = new JTextField();
+				txtXRange.setBounds(scale(graphWidth + 435), scale(120), scale(160), scale(35));
+				txtXRange.setForeground(MFrame.cl250);
+				txtXRange.setBackground(MFrame.clDkPane);
+				txtXRange.setCaretColor(MFrame.cl250);
+				txtXRange.setSelectionColor(MFrame.cl250);
+				txtXRange.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(18)));
+				txtXRange.setText(String.valueOf(xRange));
+				txtXRange.setFont(new Font("Consolas", Font.PLAIN, scale(16)));
+				p.add(txtXRange);
+				
+				// Label for xRange
+				JLabel lblYRange = new JLabel("y:");
+				lblYRange.setBounds(scale(graphWidth + 415), scale(170), scale(25), scale(25));
+				lblYRange.setForeground(MFrame.cl250);
+				lblYRange.setFont(new Font("Microsoft Tai Le", Font.BOLD, scale(20)));
+				p.add(lblYRange);
+
+				// Entry for xRange
+				JTextField txtYRange = new JTextField();
+				txtYRange.setBounds(scale(graphWidth + 435), scale(165), scale(160), scale(35));
+				txtYRange.setForeground(MFrame.cl250);
+				txtYRange.setBackground(MFrame.clDkPane);
+				txtYRange.setCaretColor(MFrame.cl250);
+				txtYRange.setSelectionColor(MFrame.cl250);
+				txtYRange.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(18)));
+				txtYRange.setText(String.valueOf(yRange));
+				txtYRange.setFont(new Font("Consolas", Font.PLAIN, scale(16)));
+				p.add(txtYRange);
+				
+				//label for soom
+				JLabel lblZoom = new JLabel("Zoom:");
+				lblZoom.setBounds(scale(graphWidth + 415), scale(220), scale(140), scale(25));
+				lblZoom.setForeground(MFrame.cl250);
+				lblZoom.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(18)));
+				p.add(lblZoom);
 				
 				ActionListener updateAction = new ActionListener() {
 					@Override
@@ -411,8 +445,9 @@ public class Main {
 								p.remove(graph);
 								
 								String expression = txtFunc.getText();
-								double precision = 0.01, range = 20;
+								double precision = 0.01, xRange = 20, yRange = 20;
 								boolean okayToGraph = true;
+								
 								// Make sure the range and precision input is valid
 								try {
 									precision = Double.parseDouble(txtPrecision.getText());
@@ -425,18 +460,31 @@ public class Main {
 								}
 
 								try {
-									range = Double.parseDouble(txtRange.getText());
-									txtRange.setForeground(MFrame.cl250);
+									xRange = Double.parseDouble(txtXRange.getText());
+									txtXRange.setForeground(MFrame.cl250);
 									lblRange.setForeground(MFrame.cl250);
+									lblXRange.setForeground(MFrame.cl250);
 								} catch (NumberFormatException e) {
-									txtRange.setForeground(MFrame.clCrimson);
+									txtXRange.setForeground(MFrame.clCrimson);
 									lblRange.setForeground(MFrame.clCrimson);
+									lblXRange.setForeground(MFrame.clCrimson);
+									okayToGraph = false;
+								}
+								
+								try {
+									yRange = Double.parseDouble(txtYRange.getText());
+									txtYRange.setForeground(MFrame.cl250);
+									lblYRange.setForeground(MFrame.cl250);
+								} catch (NumberFormatException e) {
+									txtYRange.setForeground(MFrame.clCrimson);
+									lblRange.setForeground(MFrame.clCrimson);
+									lblYRange.setForeground(MFrame.clCrimson);
 									okayToGraph = false;
 								}
 								// Only build graph is valid input
 								if (okayToGraph) {
 									try {
-										buildGraph(expression, range, precision);
+										buildGraph(expression, xRange, yRange, precision);
 										txtFunc.setForeground(MFrame.cl250);
 										label.setForeground(MFrame.cl250);
 									} catch (Exception e) {
@@ -449,6 +497,52 @@ public class Main {
 					}
 				};
 
+				double zoomFactor = 0.2d;
+				//Zoom buttons
+				MButton1 btnZoomIn = new MButton1("+Zoom in", 415, 250, 95, 35, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						//Get current range
+						double xRange = Double.parseDouble(txtXRange.getText());
+						double yRange = Double.parseDouble(txtYRange.getText());
+						
+						//Do zooming
+						xRange *= 1.0-zoomFactor;
+						yRange *= 1.0-zoomFactor;
+						
+						//Update range entry fields
+						txtXRange.setText(String.valueOf(Math.round(xRange)));
+						txtYRange.setText(String.valueOf(Math.round(yRange)));
+						
+						//Update graph
+						updateAction.actionPerformed(null);
+					}
+				});
+				btnZoomIn.setRelativeTo(graphWidth, 0);
+				p.add(btnZoomIn.getButton());
+				
+				MButton1 btnZoomOut = new MButton1("-Zoom out", 515, 250, 95, 35, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						//Get current range
+						double xRange = Double.parseDouble(txtXRange.getText());
+						double yRange = Double.parseDouble(txtYRange.getText());
+						
+						//Do zooming
+						xRange *= 1.0+zoomFactor;
+						yRange *= 1.0+zoomFactor;
+						
+						//Update range entry fields
+						txtXRange.setText(String.valueOf(Math.round(xRange)));
+						txtYRange.setText(String.valueOf(Math.round(yRange)));
+						
+						//Update graph
+						updateAction.actionPerformed(null);
+					}
+				});
+				btnZoomOut.setRelativeTo(graphWidth, 0);
+				p.add(btnZoomOut.getButton());
+				
 				// Button to update graph
 				MButton2 btnUpdate = new MButton2("Graph it!", 50, -105, 110, 35, updateAction);
 				btnUpdate.setRelativeTo(graphWidth, h);
@@ -464,7 +558,8 @@ public class Main {
 				};
 				txtFunc.addKeyListener(enterListener);
 				txtPrecision.addKeyListener(enterListener);
-				txtRange.addKeyListener(enterListener);
+				txtXRange.addKeyListener(enterListener);
+				txtYRange.addKeyListener(enterListener);
 
 				MButton2 btnClear = new MButton2("Clear", 165, -105, 110, 35, new ActionListener() {
 					@Override
@@ -527,21 +622,22 @@ public class Main {
 
 				// make frame visible
 				frame.setVisible(true);
-
+				
+				//Build graph for the first time
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						buildGraph(expression, range, precision);
+						buildGraph(expression, xRange, yRange, precision);
 					}
 				}).start();
 			}
 		});
 	}
 
-	private static void buildGraph(String expression, double range, double precision) {
-		double start = 0 - range / 2;
-		double end = range / 2;
-		int numOfPoints = (int) (range / precision);
+	private static void buildGraph(String expression, double xRange, double yRange, double precision) {
+		double start = 0 - xRange / 2;
+		double end = xRange / 2;
+		int numOfPoints = (int) (xRange / precision);
 
 		// Create array of points
 		Point2D.Double[] points = new Point2D.Double[numOfPoints];
@@ -560,7 +656,7 @@ public class Main {
 			// Get y value of function with x as input
 			double output = evaluate(expression, input);
 			
-			if(output > range) {//If number is out of range
+			if(output > yRange) {//If number is out of xRange
 				y = Double.NaN;				//then replace with NaN
 			} else {
 				y = output;	//Otherwise use the normal output
@@ -577,7 +673,7 @@ public class Main {
 
 		// Graph
 		graph = new Graph(10, 10, graphWidth, graphWidth, points);
-		graph.setRange(range);
+		graph.setxRange(xRange, yRange);
 		p.add(graph);
 
 		// Re-draw frame
