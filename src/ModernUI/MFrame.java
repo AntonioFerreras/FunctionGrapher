@@ -1,9 +1,3 @@
-/*
- * DISCLAIMER:
- * The Modern UI library was written a long time ago...
- * Back when I didn't make clean code. So yes, this package is quite messy.
- */
-
 package ModernUI;
 
 import java.awt.AWTException;
@@ -58,8 +52,6 @@ public class MFrame {
 		setUiM(uim);
 		uiReCalc = action;
 		
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
 		effectiveScreenWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 		effectiveScreenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 
@@ -83,7 +75,7 @@ public class MFrame {
 		frame.setSize(scale(START_WINDOW_WIDTH), scale(START_WINDOW_HEIGHT));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
-		// System.out.println(frame.getWidth());
+
 		// Create background panel
 		backp = new JPanel();
 		backp.setBounds(0, 0, START_WINDOW_WIDTH * 60, START_WINDOW_HEIGHT * 60);
@@ -101,6 +93,7 @@ public class MFrame {
 		topp.setLayout(null);
 		backp.add(topp);
 		
+		//Window title
 		lblTitle = new JLabel(n);
 		lblTitle.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(16)));
 		lblTitle.setForeground(cl250);
@@ -134,13 +127,15 @@ public class MFrame {
 		botp.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
-				if (maximized == false && Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y)) > scale(MINIMUM_WINDOW_HEIGHT)) {
-
-					frame.setSize(scale(WINDOW_WIDTH),
-							Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y)));
-					WINDOW_HEIGHT = unScale(frame.getHeight());
+				
+				int resizedHeight = Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y));
+				
+				if (maximized == false && resizedHeight > scale(MINIMUM_WINDOW_HEIGHT)) {
+					//Set frame height to new, resized height
+					frame.setSize(scale(WINDOW_WIDTH), resizedHeight);
+					//update window height variable
+					WINDOW_HEIGHT = unScale(resizedHeight);
 					START_WINDOW_HEIGHT = WINDOW_HEIGHT;
 					reCalcComponents();
 				}
@@ -155,19 +150,16 @@ public class MFrame {
 		rightp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				rightp.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				X = e.getX();
 				Y = e.getY();
 			}
@@ -175,15 +167,18 @@ public class MFrame {
 		rightp.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
-				if (maximized == false && Math
-						.abs(X - (e.getXOnScreen() - frame.getLocationOnScreen().x)) > scale(MINIMUM_WINDOW_WIDTH)) {
-
-					frame.setSize(Math.abs(X - (e.getXOnScreen() - frame.getLocationOnScreen().x)),
-							scale(WINDOW_HEIGHT));
-					WINDOW_WIDTH = unScale(frame.getWidth());
+				
+				int resizedWidth = Math.abs(X - (e.getXOnScreen() - frame.getLocationOnScreen().x));
+				
+				if (maximized == false && resizedWidth > scale(MINIMUM_WINDOW_WIDTH)) {
+					//Update frame width
+					frame.setSize(resizedWidth, scale(WINDOW_HEIGHT));
+					
+					WINDOW_WIDTH = unScale(resizedWidth);
 					START_WINDOW_WIDTH = WINDOW_WIDTH;
+					
+					//recalculate component coordinates
 					reCalcComponents();
 				}
 			}
@@ -195,7 +190,6 @@ public class MFrame {
 		leftp.setBackground(clBack);
 		leftp.setLayout(null);
 		leftp.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -218,15 +212,20 @@ public class MFrame {
 		leftp.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
-				if (maximized == false && frame.getWidth()
-						+ (X - (e.getXOnScreen() - frame.getLocationOnScreen().x)) > scale(MINIMUM_WINDOW_WIDTH)) {
-					frame.setSize(frame.getWidth() + (X - (e.getXOnScreen() - frame.getLocationOnScreen().x)),
-							scale(WINDOW_HEIGHT));
+				
+				int resizedWidth = frame.getWidth() + (X - (e.getXOnScreen() - frame.getLocationOnScreen().x));
+				
+				if (maximized == false && resizedWidth > scale(MINIMUM_WINDOW_WIDTH)) {
+					//Update size and location of frame
+					frame.setSize(resizedWidth, scale(WINDOW_HEIGHT));
 					frame.setLocation(e.getXOnScreen(), frame.getY());
-					WINDOW_WIDTH = unScale(frame.getWidth());
+					
+					//update window width variable
+					WINDOW_WIDTH = unScale(resizedWidth);
 					START_WINDOW_WIDTH = WINDOW_WIDTH;
+					
+					//update component coordinates
 					reCalcComponents();
 				}
 			}
@@ -240,19 +239,16 @@ public class MFrame {
 		botrightp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				botrightp.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				X = e.getX();
 				Y = e.getY();
 			}
@@ -260,25 +256,32 @@ public class MFrame {
 		botrightp.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
-				if (maximized == false && Math
-						.abs(X - (e.getXOnScreen() - frame.getLocationOnScreen().x)) > scale(MINIMUM_WINDOW_WIDTH)) {
-
-					frame.setSize(Math.abs(X - (e.getXOnScreen() - frame.getLocationOnScreen().x)),
-							scale(WINDOW_HEIGHT));
-					WINDOW_WIDTH = unScale(frame.getWidth());
-					START_WINDOW_WIDTH = WINDOW_WIDTH;
-					reCalcComponents();
-				}
-				if (maximized == false && Math
-						.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y)) > scale(MINIMUM_WINDOW_HEIGHT)) {
-
-					frame.setSize(scale(WINDOW_WIDTH),
-							Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y)));
-					WINDOW_HEIGHT = unScale(frame.getHeight());
-					START_WINDOW_HEIGHT = WINDOW_HEIGHT;
-					reCalcComponents();
+				
+				//Pixel size of frame when mouse is dragged
+				int resizedWidth = Math.abs(X - (e.getXOnScreen() - frame.getLocationOnScreen().x));
+				int resizedHeight = Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y));
+				
+				if(!maximized) {
+					if (resizedWidth > scale(MINIMUM_WINDOW_WIDTH)) {
+						//update frame width and variables
+						frame.setSize(resizedWidth, scale(WINDOW_HEIGHT));
+						WINDOW_WIDTH = unScale(resizedWidth);
+						START_WINDOW_WIDTH = WINDOW_WIDTH;
+						
+						//Recalculate component coordinates
+						reCalcComponents();
+					}
+					
+					if (resizedHeight > scale(MINIMUM_WINDOW_HEIGHT)) {
+						//update frame width and variables
+						frame.setSize(scale(WINDOW_WIDTH), resizedHeight);
+						WINDOW_HEIGHT = unScale(resizedHeight);
+						START_WINDOW_HEIGHT = WINDOW_HEIGHT;
+						
+						//Recalculate component coordinates
+						reCalcComponents();
+					}
 				}
 			}
 		});
@@ -291,19 +294,16 @@ public class MFrame {
 		botleftp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				botleftp.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				X = 0;
 				Y = e.getY();
 			}
@@ -314,22 +314,36 @@ public class MFrame {
 				// TODO Auto-generated method stub
 				frame.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
 				if (maximized == false) {
-					if(frame.getWidth() + (X - (e.getXOnScreen() - frame.getLocationOnScreen().x)) > scale(MINIMUM_WINDOW_WIDTH)) {
-						frame.setSize(frame.getWidth() + (X - (e.getXOnScreen() - frame.getLocationOnScreen().x)),
-								scale(WINDOW_HEIGHT));
+					int resizedWidth = frame.getWidth() + (X - (e.getXOnScreen() - frame.getLocationOnScreen().x));
+					if(resizedWidth > scale(MINIMUM_WINDOW_WIDTH)) {
+						//Update frame size and location
+						frame.setSize(resizedWidth, scale(WINDOW_HEIGHT));
 						frame.setLocation(e.getXOnScreen(), frame.getY());
-						WINDOW_WIDTH = unScale(frame.getWidth());
+						
+						//Update variables
+						WINDOW_WIDTH = unScale(resizedWidth);
 						WINDOW_HEIGHT = unScale(frame.getHeight());
+						
 						START_WINDOW_WIDTH = WINDOW_WIDTH;
 						START_WINDOW_HEIGHT = WINDOW_HEIGHT;
+						
+						//Update component coordinates
 						reCalcComponents();
 					}
-					if(Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y)) > scale(MINIMUM_WINDOW_HEIGHT)) {
-						frame.setSize(frame.getWidth(), Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y)));
+					
+					int resizedHeight = Math.abs(Y - (e.getYOnScreen() - frame.getLocationOnScreen().y));
+					if (resizedHeight > scale(MINIMUM_WINDOW_HEIGHT)) {
+						//Update frame size
+						frame.setSize(frame.getWidth(), resizedHeight);
+						
+						//Update variables
 						WINDOW_WIDTH = unScale(frame.getWidth());
 						WINDOW_HEIGHT = unScale(frame.getHeight());
+						
 						START_WINDOW_WIDTH = WINDOW_WIDTH;
 						START_WINDOW_HEIGHT = WINDOW_HEIGHT;
+						
+						//Update component coordinates
 						reCalcComponents();
 					}
 				}
@@ -337,22 +351,7 @@ public class MFrame {
 		});
 		backp.add(botleftp);
 
-		MouseListener ml = new MouseListener() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-			}
-
+		MouseListener ml = new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -362,42 +361,41 @@ public class MFrame {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
+				//Keep top of window visible
 				if (frameY < 0)
 					frame.setLocation(frameX, 0);
 				
+				//Snap window to side of screen
 				if(e.getXOnScreen() == 0) {
 					frame.setSize((int)(effectiveScreenWidth/2), effectiveScreenHeight);
 					frame.setLocation(0,0);
+					
 					WINDOW_WIDTH = unScale(frame.getWidth());
 					WINDOW_HEIGHT = unScale(frame.getHeight());
+					
 					reCalcComponents();
 				} else if (e.getXOnScreen() == effectiveScreenWidth-1) {
 					frame.setSize((int)(effectiveScreenWidth/2), effectiveScreenHeight);
 					frame.setLocation((int)(effectiveScreenWidth/2),0);
+					
 					WINDOW_WIDTH = unScale(frame.getWidth());
 					WINDOW_HEIGHT = unScale(frame.getHeight());
+					
 					reCalcComponents();
 				}
 			}
 		};
+		
 		// Used for moving window
-		MouseMotionListener mml = new MouseMotionListener() {
+		MouseMotionListener mml = new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
 				if (maximized == false) {
 					frameX = frame.getX();
 					frameY = frame.getY();
+					//Move window
 					frame.setLocation(e.getXOnScreen() - X, e.getYOnScreen() - Y);
-					
-
 				}
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent arg0) {
-				// TODO Auto-generated method stub
 			}
 		};
 		topp.addMouseListener(ml);
@@ -410,7 +408,6 @@ public class MFrame {
 			}
 		});
 		btnX.setFont(new Font("Microsoft Tai Le", Font.BOLD, scale(18)));
-		//btnX.setFont(new Font("Arial Unicode MS", Font.BOLD, scale(19)));
 		btnX.setBackgroundColor(clCrimson);
 		topp.add(btnX.getButton());
 		btnX.setRelativeTo(START_WINDOW_WIDTH, 0);
@@ -443,13 +440,7 @@ public class MFrame {
 		// Create minimize button
 		btnMinimize = new MButton2("-", -155, 10, 40, 20, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				int tempX = frame.getX();
-//				int tempY = frame.getY();
-//				while (frame.getY() < gd.getDisplayMode().getHeight()) {
-//					frame.setLocation(frame.getX(), frame.getY() + scale(4));
-//				}
 				frame.setState(Frame.ICONIFIED);
-				//frame.setLocation(tempX, tempY);
 			}
 		});
 		btnMinimize.setRelativeTo(START_WINDOW_WIDTH, 0);
