@@ -28,7 +28,6 @@ public class MOptionPane {
 	private MButton2 btnX;
 	private int X, Y, frameX, frameY;
 	private float uiM = 1.0f;
-	private boolean maximized = false;
 	private ActionListener closeAction;
 
 	// Basic colors
@@ -47,17 +46,16 @@ public class MOptionPane {
 		 * Size of panel is already scaled
 		 */
 		uiM = MFrame.getUiM();
-		int w = p.getWidth()+scale(30);
-		int h = p.getHeight()+scale(40+15);
-		
+		int w = p.getWidth() + scale(30);
+		int h = p.getHeight() + scale(40 + 15);
+
 		// Create Frame
 		frame = new JFrame(n);
 		frame.setSize(w, h);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
-		//frame.setAlwaysOnTop(true);
-		
+
 		// Create background panel
 		backp = new JPanel();
 		backp.setBounds(0, 0, w * 60, h * 60);
@@ -65,19 +63,19 @@ public class MOptionPane {
 		backp.setLayout(null);
 		frame.add(backp);
 
-		// Create panel tat allows user to move window
+		// Create panel that allows user to move window
 		JPanel topp = new JPanel();
 		topp.setBounds(0, 0, w * 60, scale(40));
 		topp.setBackground(clBack);
 		topp.setLayout(null);
 		backp.add(topp);
-		
+
+		// Window title
 		JLabel lblTitle = new JLabel(n);
 		lblTitle.setFont(new Font("Microsoft Tai Le", Font.PLAIN, scale(16)));
 		lblTitle.setForeground(cl250);
 		lblTitle.setBounds(scale(15), scale(5), scale(200), scale(35));
 		topp.add(lblTitle);
-
 
 		MouseListener ml = new MouseAdapter() {
 			@Override
@@ -91,16 +89,16 @@ public class MOptionPane {
 		MouseMotionListener mml = new MouseMotionListener() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated metod stub
-					frameX = frame.getX();
-					frame.getY();
-					frame.setLocation(e.getXOnScreen() - X, e.getYOnScreen() - Y);
+				// TODO Auto-generated method stub
+				frameX = frame.getX();
+				frame.getY();
+				frame.setLocation(e.getXOnScreen() - X, e.getYOnScreen() - Y);
 
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
-				// TODO Auto-generated metod stub
+				// TODO Auto-generated method stub
 			}
 		};
 		topp.addMouseListener(ml);
@@ -111,27 +109,25 @@ public class MOptionPane {
 				frame.dispose();
 			}
 		};
-		
+
 		// Create Close button
 		btnX = new MButton2("x", -55, 10, 40, 20, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeAction.actionPerformed(null);
-				
+
 			}
 		});
 		btnX.setFont(new Font("Microsoft Tai Le", Font.BOLD, scale(18)));
-		//btnX.setFont(new Font("Arial Unicode MS", Font.BOLD, scale(19)));
 		btnX.setBackgroundColor(clCrimson);
 		topp.add(btnX.getButton());
 		btnX.setRelativeTo(unScale(w), 0);
-		
-		
+
 		p.setLocation(scale(15), topp.getHeight());
 		backp.add(p);
-		
+
 		frame.setVisible(true);
 	}
-	
+
 	private int scale(int n) {
 		return (int) (n * uiM);
 	}
@@ -143,7 +139,7 @@ public class MOptionPane {
 	public void setCloseAction(ActionListener action) {
 		closeAction = action;
 	}
-	
+
 	public JFrame getFrame() {
 		return frame;
 	}
